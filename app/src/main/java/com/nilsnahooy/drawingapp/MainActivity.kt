@@ -8,16 +8,15 @@ import android.widget.ImageButton
 class MainActivity : AppCompatActivity() {
 
     private var canvasView: CanvasView? = null
-    private var btnBrushSize: ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         canvasView = findViewById(R.id.cv_main_canvas)
-        btnBrushSize = findViewById(R.id.ib_open_brush_size_dialog)
+        val btnBrushSize: ImageButton = findViewById(R.id.ib_open_brush_size_dialog)
         canvasView?.setBrushSize(20.0f)
 
-        btnBrushSize?.setOnClickListener {
+        btnBrushSize.setOnClickListener {
             showBrushSizeDialog()
         }
     }
@@ -37,12 +36,12 @@ class MainActivity : AppCompatActivity() {
        }
 
         btnMedium.setOnClickListener {
-            canvasView?.setBrushSize(15f)
+            canvasView?.setBrushSize(20f)
             brushSizeDialog.dismiss()
         }
 
         btnLarge.setOnClickListener {
-            canvasView?.setBrushSize(20f)
+            canvasView?.setBrushSize(30f)
             brushSizeDialog.dismiss()
         }
 
