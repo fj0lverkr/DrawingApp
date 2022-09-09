@@ -93,8 +93,8 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
         mDrawPaint!!.strokeWidth = mBrushSize
     }
 
-    fun setBrushColor(newColor: Int) {
-        mColor = ResourcesCompat.getColor(resources, newColor, null)
+    fun setBrushColor(newColor: String) {
+        mColor = Color.parseColor(newColor)
         mDrawPath = DrawPath(mColor, mBrushSize)
         mDrawPaint!!.color = mColor
     }

@@ -4,6 +4,8 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.iterator
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,59 +33,13 @@ class MainActivity : AppCompatActivity() {
         brushColorDialog.setContentView(R.layout.dialog_brush_color)
         brushColorDialog.setTitle(R.string.brush_color_dialog_title)
 
-        val btnBlack: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_black)
-        val btnWhite: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_white)
-        val btnGrey: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_grey)
-        val btnRed: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_red)
-        val btnGreen: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_green)
-        val btnBlue: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_blue)
-        val btnYellow: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_yellow)
-        val btnPurple: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_purple)
-        val btnCoffee: ImageButton = brushColorDialog.findViewById(R.id.ib_brush_color_coffee)
-
-        btnBlack.setOnClickListener {
-            canvasView?.setBrushColor(R.color.black)
-            brushColorDialog.dismiss()
-        }
-
-        btnWhite.setOnClickListener {
-            canvasView?.setBrushColor(R.color.white)
-            brushColorDialog.dismiss()
-        }
-
-        btnGrey.setOnClickListener {
-            canvasView?.setBrushColor(R.color.grey)
-            brushColorDialog.dismiss()
-        }
-
-        btnRed.setOnClickListener {
-            canvasView?.setBrushColor(R.color.red)
-            brushColorDialog.dismiss()
-        }
-
-        btnGreen.setOnClickListener {
-            canvasView?.setBrushColor(R.color.green)
-            brushColorDialog.dismiss()
-        }
-
-        btnBlue.setOnClickListener {
-            canvasView?.setBrushColor(R.color.blue)
-            brushColorDialog.dismiss()
-        }
-
-        btnYellow.setOnClickListener {
-            canvasView?.setBrushColor(R.color.yellow)
-            brushColorDialog.dismiss()
-        }
-
-        btnPurple.setOnClickListener {
-            canvasView?.setBrushColor(R.color.purple)
-            brushColorDialog.dismiss()
-        }
-
-        btnCoffee.setOnClickListener {
-            canvasView?.setBrushColor(R.color.coffee)
-            brushColorDialog.dismiss()
+        val llPalette: LinearLayoutCompat = brushColorDialog.findViewById(R.id.ll_palette)
+        for(v in llPalette) {
+            val ib = v as ImageButton
+            ib.setOnClickListener {
+                canvasView?.setBrushColor(it.tag.toString())
+                brushColorDialog.dismiss()
+            }
         }
 
         brushColorDialog.show()
