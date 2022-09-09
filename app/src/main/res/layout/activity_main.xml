@@ -9,6 +9,8 @@
     <com.nilsnahooy.drawingapp.CanvasView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/canvas_view_background"
         android:id="@+id/cv_main_canvas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
