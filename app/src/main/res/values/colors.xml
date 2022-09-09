@@ -8,4 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey_border">#FF9AA2AF</color>
+    <!-- palette colors -->
+    <color name="grey">#FF666666</color>
+    <color name="red">#FFFF0000</color>
+    <color name="green">#FF00FF00</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="yellow">#FFFFFF00</color>
+    <color name="purple">#FFFF00FF</color>
+    <color name="coffee">#FF4B371C</color>
 </resources>

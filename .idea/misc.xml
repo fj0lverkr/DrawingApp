@@ -3,11 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable-v24/brush_color_purple.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_black.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_blue.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_coffee.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_green.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_grey.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_purple.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_red.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_color_yellow.xml" value="0.1" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_extra_small.xml" value="0.1995" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_large.xml" value="0.1" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_medium.xml" value="0.1" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/brush_small.xml" value="0.1" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/drawable/canvas_view_background.xml" value="0.1985" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/layout/activity_main.xml" value="0.35714285714285715" />
+        <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/layout/dialog_brush_color.xml" value="0.25" />
         <entry key="..\:/Users/nilsn/AndroidStudioProjects/DrawingApp/app/src/main/res/layout/dialog_brush_size.xml" value="0.371875" />
       </map>
     </option>

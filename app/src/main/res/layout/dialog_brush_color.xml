@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageButton
+        android:id="@+id/ib_brush_color_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/brush_color_black"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_white"
+        android:src="@drawable/brush_color_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_black"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_grey"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_grey"
+        android:src="@drawable/brush_color_grey"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_white"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_red"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_red"
+        android:src="@drawable/brush_color_red"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_grey"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_green"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_green"
+        android:src="@drawable/brush_color_green"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_red"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_blue"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_blue"
+        android:src="@drawable/brush_color_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_green"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_yellow"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_yellow"
+        android:src="@drawable/brush_color_yellow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_blue"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_purple"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_color_purple"
+        android:src="@drawable/brush_color_purple"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_yellow"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_color_coffee"/>
+
+    <ImageButton
+        android:id="@+id/ib_brush_color_coffee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/brush_color_coffee"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_color_purple" />
+</androidx.constraintlayout.widget.ConstraintLayout>

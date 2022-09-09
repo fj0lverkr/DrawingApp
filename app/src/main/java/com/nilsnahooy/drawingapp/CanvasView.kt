@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 
 class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
     private var mDrawPath: DrawPath? = null
@@ -91,6 +92,13 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
         newSize, resources.displayMetrics)
         mDrawPaint!!.strokeWidth = mBrushSize
     }
+
+    fun setBrushColor(newColor: Int) {
+        mColor = ResourcesCompat.getColor(resources, newColor, null)
+        mDrawPath = DrawPath(mColor, mBrushSize)
+        mDrawPaint!!.color = mColor
+    }
+
     internal inner class DrawPath(var color: Int, var brushSize: Float): Path() {
 
     }
