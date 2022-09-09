@@ -26,9 +26,15 @@ class MainActivity : AppCompatActivity() {
         brushSizeDialog.setContentView(R.layout.dialog_brush_size)
         brushSizeDialog.setTitle(R.string.brush_size_dialog_title)
 
+        val btnXSmall: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_extra_small)
         val btnSmall: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_small)
         val btnMedium: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_medium)
         val btnLarge: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_large)
+
+        btnXSmall.setOnClickListener {
+            canvasView?.setBrushSize(5f)
+            brushSizeDialog.dismiss()
+        }
 
         btnSmall.setOnClickListener {
            canvasView?.setBrushSize(10f)

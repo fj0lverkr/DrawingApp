@@ -6,11 +6,21 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/ib_brush_size_extra_small"
+        android:src="@drawable/brush_extra_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/ib_brush_size_small"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/ib_brush_size_small"
         android:src="@drawable/brush_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ib_brush_size_extra_small"
         app:layout_constraintBottom_toTopOf="@id/ib_brush_size_medium"/>
 
     <ImageButton
