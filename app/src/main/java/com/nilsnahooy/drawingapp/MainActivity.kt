@@ -78,6 +78,8 @@ class MainActivity : AppCompatActivity() {
         val btnBrushColor: ImageButton = findViewById(R.id.ib_open_brush_color_dialog)
         val btnBrowseForImage: ImageButton = findViewById(R.id.ib_open_gallery)
         val btnUndo:ImageButton = findViewById(R.id.ib_undo)
+        val btnRedo:ImageButton = findViewById(R.id.ib_redo)
+
         canvasView = findViewById(R.id.cv_main_canvas)
         canvasView?.setBrushSize(20.0f)
 
@@ -99,6 +101,10 @@ class MainActivity : AppCompatActivity() {
 
         btnUndo.setOnClickListener {
             canvasView?.undo()
+        }
+
+        btnRedo.setOnClickListener {
+            canvasView?.redo()
         }
     }
 

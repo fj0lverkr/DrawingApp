@@ -17,6 +17,7 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
     private var mColor: Int = Color.BLACK
     private var mCanvas: Canvas? = null
     private val mPaths: ArrayList<DrawPath> = ArrayList()
+    private var mUndonePaths: ArrayList<DrawPath> = ArrayList()
 
     init {
         setupDrawing()
@@ -77,6 +78,7 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
                 }
             }
             MotionEvent.ACTION_UP -> {
+                mUndonePaths = ArrayList()
                 mPaths.add(mDrawPath!!)
                 mDrawPath = DrawPath(mColor, mBrushSize)
             }
@@ -100,7 +102,18 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
 
     fun undo() {
         if (mPaths.size > 0) {
-            mPaths.remove(mPaths[mPaths.size-1])
+            val undone = mPaths[mPaths.size-1]
+            mUndonePaths.add(undone)
+            mPaths.remove(undone)
+            invalidate()
+        }
+    }
+
+    fun redo() {
+        if(mUndonePaths.size > 0) {
+            val redone = mUndonePaths[mUndonePaths.size-1]
+            mPaths.add(redone)
+            mUndonePaths.remove(redone)
             invalidate()
         }
     }

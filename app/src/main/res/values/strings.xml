@@ -10,4 +10,6 @@
     <string name="sb_perm_allowed">Permission %1$s allowed.</string>
     <string name="sb_perm_denied">Permission %1$s denied.</string>
     <string name="cd_undo">Undo button</string>
+    <string name="cd_redo">Button redo</string>
+    <string name="cd_bg_image">Background image for the canvas</string>
 </resources>

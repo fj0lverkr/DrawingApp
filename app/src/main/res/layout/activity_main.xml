@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_bear"/>
+            android:src="@drawable/bg_bear"
+            android:contentDescription="@string/cd_bg_image"/>
 
         <com.nilsnahooy.drawingapp.CanvasView
             android:layout_width="match_parent"
@@ -79,8 +80,21 @@
         app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_open_brush_color_dialog"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_redo"
         android:src="@drawable/icon_undo"
         android:contentDescription="@string/cd_undo" />
+
+    <ImageButton
+        android:id="@+id/ib_redo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ib_undo"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/icon_redo"
+        android:contentDescription="@string/cd_redo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
