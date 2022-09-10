@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         val btnBrushSize: ImageButton = findViewById(R.id.ib_open_brush_size_dialog)
         val btnBrushColor: ImageButton = findViewById(R.id.ib_open_brush_color_dialog)
         val btnBrowseForImage: ImageButton = findViewById(R.id.ib_open_gallery)
+        val btnUndo:ImageButton = findViewById(R.id.ib_undo)
         canvasView = findViewById(R.id.cv_main_canvas)
         canvasView?.setBrushSize(20.0f)
 
@@ -94,6 +95,10 @@ class MainActivity : AppCompatActivity() {
 
         btnBrushColor.setOnClickListener {
             showBrushColorDialog()
+        }
+
+        btnUndo.setOnClickListener {
+            canvasView?.undo()
         }
     }
 

@@ -99,6 +99,13 @@ class CanvasView(context: Context, attrs : AttributeSet): View(context, attrs) {
         mDrawPaint!!.color = mColor
     }
 
+    fun undo() {
+        if (mPaths.size > 0) {
+            mPaths.remove(mPaths[mPaths.size-1])
+            invalidate()
+        }
+    }
+
     internal inner class DrawPath(var color: Int, var brushSize: Float): Path() {
 
     }

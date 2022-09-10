@@ -9,4 +9,5 @@
     <string name="label_cancel">Cancel</string>
     <string name="sb_perm_allowed">Permission %1$s allowed.</string>
     <string name="sb_perm_denied">Permission %1$s denied.</string>
+    <string name="cd_undo">Undo button</string>
 </resources>
