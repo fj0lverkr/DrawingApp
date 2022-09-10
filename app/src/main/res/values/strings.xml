@@ -3,4 +3,10 @@
     <string name="brush_size_dialog_title">Select brush size</string>
     <string name="brush_color_dialog_title">Select brush color</string>
     <string name="cd_open_brush_size">Open brush size selector</string>
+    <string name="cd_open_gallery">Open gallery</string>
+    <string name="perm_ext_storage_rat_title">Permission needed for External Storage.</string>
+    <string name="perm_ext_storage_rat_msg">To access images on your device this app needs permission to access storage.</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="sb_perm_allowed">Permission %1$s allowed.</string>
+    <string name="sb_perm_denied">Permission %1$s denied.</string>
 </resources>

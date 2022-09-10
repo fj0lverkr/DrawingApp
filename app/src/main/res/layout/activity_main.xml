@@ -6,17 +6,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
-    <com.nilsnahooy.drawingapp.CanvasView
+    <FrameLayout
+        android:id="@+id/fl_canvas_wrapper"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:padding="1dp"
         android:background="@drawable/canvas_view_background"
-        android:id="@+id/cv_main_canvas"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/ib_open_brush_size_dialog" />
+        app:layout_constraintBottom_toTopOf="@id/ib_open_brush_size_dialog">
+
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_bear"/>
+
+        <com.nilsnahooy.drawingapp.CanvasView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_background"
+            android:id="@+id/cv_main_canvas" />
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/ib_open_gallery"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_open_brush_size_dialog"
+        android:src="@drawable/icon_folder"
+        android:contentDescription="@string/cd_open_gallery" />
 
     <ImageButton
         android:id="@+id/ib_open_brush_size_dialog"
@@ -24,9 +50,9 @@
         android:layout_height="50dp"
         android:layout_margin="5dp"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@id/cv_main_canvas"
+        app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ib_open_gallery"
         app:layout_constraintEnd_toStartOf="@id/ib_open_brush_color_dialog"
         android:src="@drawable/icon_brush"
         android:contentDescription="@string/cd_open_brush_size" />
@@ -37,7 +63,7 @@
         android:layout_height="50dp"
         android:layout_margin="5dp"
         android:scaleType="fitXY"
-        app:layout_constraintTop_toBottomOf="@id/cv_main_canvas"
+        app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_open_brush_size_dialog"
         app:layout_constraintEnd_toEndOf="parent"
