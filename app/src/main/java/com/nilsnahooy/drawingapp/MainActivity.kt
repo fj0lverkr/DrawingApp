@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
@@ -51,8 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun browseForImageAndSetBackground(){
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         resultLauncher.launch(intent)
     }
 
