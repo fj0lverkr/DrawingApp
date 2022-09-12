@@ -12,4 +12,9 @@
     <string name="cd_undo">Undo button</string>
     <string name="cd_redo">Button redo</string>
     <string name="cd_bg_image">Background image for the canvas</string>
+    <string name="cd_save">Save your drawing</string>
+    <string name="perm_ext_write_storage_rat_msg">Permission to save data to storage is needed.</string>
+    <string name="sb_perm_unknown">Permission %1$s unknown.</string>
+    <string name="res_save_file">File saved as %1$s.</string>
+    <string name="res_save_failed">Failed to save bitmap file.</string>
 </resources>

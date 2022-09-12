@@ -5,10 +5,16 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
@@ -16,7 +22,16 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.iterator
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,14 +46,12 @@ class MainActivity : AppCompatActivity() {
                 val name = r.key
                 val isAllowed = r.value
                 if(isAllowed) {
-                   browseForImageAndSetBackground()
+                    browseForImageAndSetBackground()
                 }else {
-
                     Toast.makeText(this, getString(R.string.sb_perm_denied, name),
                         Toast.LENGTH_LONG).show()
                 }
             }
-
         }
 
     private var resultLauncher = registerForActivityResult(
@@ -79,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         val btnBrowseForImage: ImageButton = findViewById(R.id.ib_open_gallery)
         val btnUndo:ImageButton = findViewById(R.id.ib_undo)
         val btnRedo:ImageButton = findViewById(R.id.ib_redo)
+        val btnSave:ImageButton = findViewById(R.id.ib_save)
 
         canvasView = findViewById(R.id.cv_main_canvas)
         canvasView?.setBrushSize(20.0f)
@@ -88,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnBrowseForImage.setOnClickListener {
-            getImageFromStorage()
+            getStoragePermission()
         }
 
         btnBrushSize.setOnClickListener {
@@ -106,9 +120,18 @@ class MainActivity : AppCompatActivity() {
         btnRedo.setOnClickListener {
             canvasView?.redo()
         }
+
+        btnSave.setOnClickListener {
+            if (isReadStorageAllowed()) {
+                lifecycleScope.launch {
+                    val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
+                    saveBitmapFile(getBitmapFromView(flDrawingView))
+                }
+            }
+        }
     }
 
-    private fun getImageFromStorage() {
+    private fun getStoragePermission() {
         //handle permissions first
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(
                 Manifest.permission.READ_EXTERNAL_STORAGE
@@ -117,8 +140,15 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.perm_ext_storage_rat_msg))
         }else{
             permissionResultLauncher.launch(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }
+    }
+
+    private fun isReadStorageAllowed(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.READ_EXTERNAL_STORAGE)
+        return result == PackageManager.PERMISSION_GRANTED
     }
 
     private fun showBrushColorDialog() {
@@ -168,5 +198,50 @@ class MainActivity : AppCompatActivity() {
         }
 
         brushSizeDialog.show()
+    }
+
+    private fun getBitmapFromView(v: View): Bitmap {
+        val result: Bitmap = Bitmap.createBitmap(v.width, v.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val bgDrawable = v.background
+        if(bgDrawable != null){
+            bgDrawable.draw(canvas)
+        } else {
+            canvas.drawColor(Color.WHITE)
+        }
+        v.draw(canvas)
+        return result
+    }
+
+    private suspend fun saveBitmapFile(mBitmap: Bitmap?): String {
+        var result = ""
+        withContext(Dispatchers.IO) {
+            if(mBitmap != null) {
+                try {
+                    val bytes = ByteArrayOutputStream()
+                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
+                    val f = File(externalCacheDir?.absoluteFile.toString()
+                        + File.separator + "DrawApp_" + System.currentTimeMillis()/1000 + ".png")
+                    val fo = FileOutputStream(f)
+                    fo.write(bytes.toByteArray())
+                    fo.close()
+                    result = f.absolutePath
+
+                    runOnUiThread{
+                        if (result.isNotEmpty()) {
+                            Toast.makeText(this@MainActivity,
+                                getString(R.string.res_save_file, result), Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this@MainActivity, R.string.res_save_failed,
+                                Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    result = ""
+                    e.printStackTrace()
+                }
+            }
+        }
+        return result
     }
 }

@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/bg_bear"
             android:contentDescription="@string/cd_bg_image"/>
 
         <com.nilsnahooy.drawingapp.CanvasView
@@ -93,8 +92,20 @@
         app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/ib_undo"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_save"
         android:src="@drawable/icon_redo"
         android:contentDescription="@string/cd_redo" />
 
+    <ImageButton
+        android:id="@+id/ib_save"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="5dp"
+        android:scaleType="fitXY"
+        app:layout_constraintTop_toBottomOf="@id/fl_canvas_wrapper"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ib_redo"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/icon_save"
+        android:contentDescription="@string/cd_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>
