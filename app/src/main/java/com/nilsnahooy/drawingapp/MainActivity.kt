@@ -4,11 +4,13 @@ import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -31,6 +33,7 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.OutputStream
 import java.lang.Exception
 
 
@@ -125,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             if (isReadStorageAllowed()) {
                 lifecycleScope.launch {
                     val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
-                    saveBitmapFile(getBitmapFromView(flDrawingView))
+                    saveMediaToStorage(getBitmapFromView(flDrawingView))
                 }
             }
         }
@@ -213,24 +216,50 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private suspend fun saveBitmapFile(mBitmap: Bitmap?): String {
+    private suspend fun saveMediaToStorage(mBitmap: Bitmap?): String {
         var result = ""
-        withContext(Dispatchers.IO) {
-            if(mBitmap != null) {
-                try {
-                    val bytes = ByteArrayOutputStream()
-                    mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bytes)
-                    val f = File(externalCacheDir?.absoluteFile.toString()
-                        + File.separator + "DrawApp_" + System.currentTimeMillis()/1000 + ".png")
-                    val fo = FileOutputStream(f)
-                    fo.write(bytes.toByteArray())
-                    fo.close()
-                    result = f.absolutePath
 
-                    runOnUiThread{
+        withContext(Dispatchers.IO) {
+            if (mBitmap != null) {
+                try {
+                    val filename = "DrawApp_Image_${System.currentTimeMillis()}.png"
+                    var fos: OutputStream? = null
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        this@MainActivity.contentResolver?.also { resolver ->
+                            val contentValues = ContentValues().apply {
+                                put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                                put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+                                put(MediaStore.MediaColumns.RELATIVE_PATH,
+                                    Environment.DIRECTORY_PICTURES)
+                            }
+                            val imageUri: Uri? =
+                                resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                                    contentValues)
+                            fos = imageUri?.let { resolver.openOutputStream(it) }
+                        }
+                        result = filename
+                    } else {
+                        //These for devices running on android < Q
+                        val imagesDir =
+                            Environment.getExternalStoragePublicDirectory(
+                                Environment.DIRECTORY_PICTURES)
+                        val image = File(imagesDir, filename)
+                        fos = FileOutputStream(image)
+                        result = image.absolutePath
+                    }
+
+                    fos.use {
+                        mBitmap.compress(Bitmap.CompressFormat.PNG, 90, it)
+                    }
+
+                    runOnUiThread {
                         if (result.isNotEmpty()) {
-                            Toast.makeText(this@MainActivity,
-                                getString(R.string.res_save_file, result), Toast.LENGTH_LONG).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                getString(R.string.res_save_file, result),
+                                Toast.LENGTH_LONG
+                            ).show()
                         } else {
                             Toast.makeText(this@MainActivity, R.string.res_save_failed,
                                 Toast.LENGTH_LONG).show()
