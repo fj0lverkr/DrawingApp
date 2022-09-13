@@ -35,14 +35,10 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.lang.Exception
 
-/*
-* TODO fix permission requesting so it asks for storage permission when the first action is saving
-*  and not loading an image.
-*/
-
 class MainActivity : AppCompatActivity() {
 
     private var canvasView: CanvasView? = null
+    private var progressDialog: Dialog? = null
 
     private val permissionResultLauncher: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(
@@ -77,6 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveDrawingToMedia() {
+        showProgressDialog()
         lifecycleScope.launch {
             val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
             saveMediaToStorage(getBitmapFromView(flDrawingView))
@@ -282,6 +279,7 @@ class MainActivity : AppCompatActivity() {
                                 getString(R.string.res_save_file, result),
                                 Toast.LENGTH_LONG
                             ).show()
+                            progressDialog?.dismiss()
                         } else {
                             Toast.makeText(this@MainActivity, R.string.res_save_failed,
                                 Toast.LENGTH_LONG).show()
@@ -294,5 +292,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return result
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = Dialog(this)
+        progressDialog?.setContentView(R.layout.customs_progress_dialog)
+        progressDialog?.show()
     }
 }
