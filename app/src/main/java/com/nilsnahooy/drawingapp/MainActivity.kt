@@ -30,12 +30,15 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.lang.Exception
 
+/*
+* TODO fix permission requesting so it asks for storage permission when the first action is saving
+*  and not loading an image.
+*/
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +52,8 @@ class MainActivity : AppCompatActivity() {
                 val name = r.key
                 val isAllowed = r.value
                 if(isAllowed) {
-                    browseForImageAndSetBackground()
+                   Toast.makeText(this, getString(R.string.sb_perm_allowed, name),
+                    Toast.LENGTH_LONG).show()
                 }else {
                     Toast.makeText(this, getString(R.string.sb_perm_denied, name),
                         Toast.LENGTH_LONG).show()
@@ -70,6 +74,13 @@ class MainActivity : AppCompatActivity() {
     private fun browseForImageAndSetBackground(){
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         resultLauncher.launch(intent)
+    }
+
+    private fun saveDrawingToMedia() {
+        lifecycleScope.launch {
+            val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
+            saveMediaToStorage(getBitmapFromView(flDrawingView))
+        }
     }
 
     private fun isExternalStorageAvailable(): Boolean {
@@ -105,7 +116,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnBrowseForImage.setOnClickListener {
-            getStoragePermission()
+            if (isReadStorageAllowed()) {
+                browseForImageAndSetBackground()
+            } else {
+                getStoragePermission()
+                browseForImageAndSetBackground()
+            }
         }
 
         btnBrushSize.setOnClickListener {
@@ -125,32 +141,38 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            if (isReadStorageAllowed()) {
-                lifecycleScope.launch {
-                    val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
-                    saveMediaToStorage(getBitmapFromView(flDrawingView))
-                }
+            if (isWriteStorageAllowed()) {
+               saveDrawingToMedia()
+            } else {
+                getStoragePermission()
+                saveDrawingToMedia()
             }
         }
     }
 
     private fun getStoragePermission() {
-        //handle permissions first
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && shouldShowRequestPermissionRationale(
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        )) {
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                && shouldShowRequestPermissionRationale(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             showRationaleDialog(getString(R.string.perm_ext_storage_rat_title),
             getString(R.string.perm_ext_storage_rat_msg))
-        }else{
+
             permissionResultLauncher.launch(
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                Manifest.permission.WRITE_EXTERNAL_STORAGE))
         }
     }
 
     private fun isReadStorageAllowed(): Boolean {
         val result = ContextCompat.checkSelfPermission(this,
             Manifest.permission.READ_EXTERNAL_STORAGE)
+        return result == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun isWriteStorageAllowed(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
         return result == PackageManager.PERMISSION_GRANTED
     }
 
