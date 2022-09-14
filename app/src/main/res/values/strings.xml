@@ -17,5 +17,9 @@
     <string name="sb_perm_unknown">Permission %1$s unknown.</string>
     <string name="res_save_file">File saved as %1$s.</string>
     <string name="res_save_failed">Failed to save bitmap file.</string>
-    <string name="label_loading">Loading...</string>
+    <string name="label_loading">Loading…</string>
+    <string name="title_share_intent">Share your drawing</string>
+    <string name="cd_share">Share your drawing</string>
+    <string name="msg_share_error">Unable to share image.</string>
+    <string name="warn_no_share_path">Nothing to share…</string>
 </resources>

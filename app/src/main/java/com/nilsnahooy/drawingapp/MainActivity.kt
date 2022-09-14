@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -33,7 +34,6 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,11 +72,11 @@ class MainActivity : AppCompatActivity() {
         resultLauncher.launch(intent)
     }
 
-    private fun saveDrawingToMedia() {
+    private fun saveDrawingToMedia(isShare: Boolean) {
         showProgressDialog()
         lifecycleScope.launch {
             val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
-            saveMediaToStorage(getBitmapFromView(flDrawingView))
+            saveMediaToStorage(getBitmapFromView(flDrawingView), isShare)
         }
     }
 
@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         val btnUndo:ImageButton = findViewById(R.id.ib_undo)
         val btnRedo:ImageButton = findViewById(R.id.ib_redo)
         val btnSave:ImageButton = findViewById(R.id.ib_save)
+        val btnShare:ImageButton = findViewById(R.id.ib_share)
 
         canvasView = findViewById(R.id.cv_main_canvas)
         canvasView?.setBrushSize(20.0f)
@@ -113,12 +114,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnBrowseForImage.setOnClickListener {
-            if (isReadStorageAllowed()) {
-                browseForImageAndSetBackground()
-            } else {
-                getStoragePermission()
-                browseForImageAndSetBackground()
-            }
+            if (isReadStorageAllowed()) getStoragePermission()
+            browseForImageAndSetBackground()
         }
 
         btnBrushSize.setOnClickListener {
@@ -138,12 +135,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSave.setOnClickListener {
-            if (isWriteStorageAllowed()) {
-               saveDrawingToMedia()
-            } else {
-                getStoragePermission()
-                saveDrawingToMedia()
-            }
+            if (!isWriteStorageAllowed()) getStoragePermission()
+            saveDrawingToMedia(false)
+        }
+
+        btnShare.setOnClickListener {
+            if (!isWriteStorageAllowed()) getStoragePermission()
+            saveDrawingToMedia(true)
         }
     }
 
@@ -235,7 +233,7 @@ class MainActivity : AppCompatActivity() {
         return result
     }
 
-    private suspend fun saveMediaToStorage(mBitmap: Bitmap?): String {
+    private suspend fun saveMediaToStorage(mBitmap: Bitmap?, isShare: Boolean): String {
         var result = ""
 
         withContext(Dispatchers.IO) {
@@ -244,7 +242,7 @@ class MainActivity : AppCompatActivity() {
                     val filename = "DrawApp_Image_${System.currentTimeMillis()}.png"
                     var fos: OutputStream? = null
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !isShare) {
                         this@MainActivity.contentResolver?.also { resolver ->
                             val contentValues = ContentValues().apply {
                                 put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
@@ -259,7 +257,6 @@ class MainActivity : AppCompatActivity() {
                         }
                         result = filename
                     } else {
-                        //These for devices running on android < Q
                         val imagesDir =
                             Environment.getExternalStoragePublicDirectory(
                                 Environment.DIRECTORY_PICTURES)
@@ -274,16 +271,20 @@ class MainActivity : AppCompatActivity() {
 
                     runOnUiThread {
                         if (result.isNotEmpty()) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                getString(R.string.res_save_file, result),
-                                Toast.LENGTH_LONG
-                            ).show()
-                            progressDialog?.dismiss()
+                            if (isShare){
+                                shareImage(result)
+                            } else {
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    getString(R.string.res_save_file, result),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         } else {
                             Toast.makeText(this@MainActivity, R.string.res_save_failed,
                                 Toast.LENGTH_LONG).show()
                         }
+                        progressDialog?.dismiss()
                     }
                 } catch (e: Exception) {
                     result = ""
@@ -298,5 +299,21 @@ class MainActivity : AppCompatActivity() {
         progressDialog = Dialog(this)
         progressDialog?.setContentView(R.layout.customs_progress_dialog)
         progressDialog?.show()
+    }
+
+    private fun shareImage(uriString: String?) {
+        if(uriString != null && uriString.isNotEmpty()) {
+            MediaScannerConnection.scanFile(this, arrayOf(uriString), null) {
+                    _, uri ->
+                val shareIntent = Intent()
+                shareIntent.action = Intent.ACTION_SEND
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                shareIntent.type = "image/png"
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.title_share_intent)))
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.warn_no_share_path), Toast.LENGTH_LONG)
+                .show()
+        }
     }
 }
