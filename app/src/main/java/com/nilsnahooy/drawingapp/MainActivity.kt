@@ -17,17 +17,19 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.iterator
 import androidx.lifecycle.lifecycleScope
+import com.nilsnahooy.drawingapp.databinding.ActivityMainBinding
+import com.nilsnahooy.drawingapp.databinding.CustomsProgressDialogBinding
+import com.nilsnahooy.drawingapp.databinding.DialogBrushColorBinding
+import com.nilsnahooy.drawingapp.databinding.DialogBrushSizeBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,7 +39,7 @@ import java.io.OutputStream
 
 class MainActivity : AppCompatActivity() {
 
-    private var canvasView: CanvasView? = null
+    private var b: ActivityMainBinding? = null
     private var progressDialog: Dialog? = null
 
     private val permissionResultLauncher: ActivityResultLauncher<Array<String>> =
@@ -75,8 +77,7 @@ class MainActivity : AppCompatActivity() {
     private fun saveDrawingToMedia(isShare: Boolean) {
         showProgressDialog()
         lifecycleScope.launch {
-            val flDrawingView: FrameLayout = findViewById(R.id.fl_canvas_wrapper)
-            saveMediaToStorage(getBitmapFromView(flDrawingView), isShare)
+            saveMediaToStorage(getBitmapFromView(b?.flCanvasWrapper!!), isShare)
         }
     }
 
@@ -97,49 +98,43 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val btnBrushSize: ImageButton = findViewById(R.id.ib_open_brush_size_dialog)
-        val btnBrushColor: ImageButton = findViewById(R.id.ib_open_brush_color_dialog)
-        val btnBrowseForImage: ImageButton = findViewById(R.id.ib_open_gallery)
-        val btnUndo:ImageButton = findViewById(R.id.ib_undo)
-        val btnRedo:ImageButton = findViewById(R.id.ib_redo)
-        val btnSave:ImageButton = findViewById(R.id.ib_save)
-        val btnShare:ImageButton = findViewById(R.id.ib_share)
 
-        canvasView = findViewById(R.id.cv_main_canvas)
-        canvasView?.setBrushSize(20.0f)
+        b = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(b?.root)
+
+        b?.cvMainCanvas?.setBrushSize(20.0f)
 
         if (!isExternalStorageAvailable()) {
-            btnBrowseForImage.isEnabled = false
+            b?.ibOpenGallery?.isEnabled = false
         }
 
-        btnBrowseForImage.setOnClickListener {
+        b?.ibOpenGallery?.setOnClickListener {
             if (isReadStorageAllowed()) getStoragePermission()
             browseForImageAndSetBackground()
         }
 
-        btnBrushSize.setOnClickListener {
+        b?.ibOpenBrushSizeDialog?.setOnClickListener {
             showBrushSizeDialog()
         }
 
-        btnBrushColor.setOnClickListener {
+        b?.ibOpenBrushColorDialog?.setOnClickListener {
             showBrushColorDialog()
         }
 
-        btnUndo.setOnClickListener {
-            canvasView?.undo()
+        b?.ibUndo?.setOnClickListener {
+            b?.cvMainCanvas?.undo()
         }
 
-        btnRedo.setOnClickListener {
-            canvasView?.redo()
+        b?.ibRedo?.setOnClickListener {
+            b?.cvMainCanvas?.redo()
         }
 
-        btnSave.setOnClickListener {
+        b?.ibSave?.setOnClickListener {
             if (!isWriteStorageAllowed()) getStoragePermission()
             saveDrawingToMedia(false)
         }
 
-        btnShare.setOnClickListener {
+        b?.ibShare?.setOnClickListener {
             if (!isWriteStorageAllowed()) getStoragePermission()
             saveDrawingToMedia(true)
         }
@@ -173,14 +168,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun showBrushColorDialog() {
         val brushColorDialog = Dialog(this)
-        brushColorDialog.setContentView(R.layout.dialog_brush_color)
+        val dB = DialogBrushColorBinding.inflate(layoutInflater)
+        brushColorDialog.setContentView(dB.root)
         brushColorDialog.setTitle(R.string.brush_color_dialog_title)
 
-        val llPalette: LinearLayoutCompat = brushColorDialog.findViewById(R.id.ll_palette)
-        for(v in llPalette) {
+        for(v in dB.root) {
             val ib = v as ImageButton
             ib.setOnClickListener {
-                canvasView?.setBrushColor(it.tag.toString())
+                b?.cvMainCanvas?.setBrushColor(it.tag.toString())
                 brushColorDialog.dismiss()
             }
         }
@@ -189,31 +184,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun showBrushSizeDialog() {
         val brushSizeDialog = Dialog(this)
-        brushSizeDialog.setContentView(R.layout.dialog_brush_size)
+        val dB = DialogBrushSizeBinding.inflate(layoutInflater)
+        brushSizeDialog.setContentView(dB.root)
         brushSizeDialog.setTitle(R.string.brush_size_dialog_title)
 
-        val btnXSmall: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_extra_small)
-        val btnSmall: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_small)
-        val btnMedium: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_medium)
-        val btnLarge: ImageButton = brushSizeDialog.findViewById(R.id.ib_brush_size_large)
-
-        btnXSmall.setOnClickListener {
-            canvasView?.setBrushSize(5f)
+        dB.ibBrushSizeExtraSmall.setOnClickListener {
+            b?.cvMainCanvas?.setBrushSize(5f)
             brushSizeDialog.dismiss()
         }
 
-        btnSmall.setOnClickListener {
-           canvasView?.setBrushSize(10f)
+        dB.ibBrushSizeSmall.setOnClickListener {
+           b?.cvMainCanvas?.setBrushSize(10f)
            brushSizeDialog.dismiss()
        }
 
-        btnMedium.setOnClickListener {
-            canvasView?.setBrushSize(20f)
+        dB.ibBrushSizeMedium.setOnClickListener {
+            b?.cvMainCanvas?.setBrushSize(20f)
             brushSizeDialog.dismiss()
         }
 
-        btnLarge.setOnClickListener {
-            canvasView?.setBrushSize(30f)
+        dB.ibBrushSizeLarge.setOnClickListener {
+            b?.cvMainCanvas?.setBrushSize(30f)
             brushSizeDialog.dismiss()
         }
 
@@ -297,7 +288,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showProgressDialog() {
         progressDialog = Dialog(this)
-        progressDialog?.setContentView(R.layout.customs_progress_dialog)
+        val dB = CustomsProgressDialogBinding.inflate(layoutInflater)
+        progressDialog?.setContentView(dB.root)
         progressDialog?.show()
     }
 
